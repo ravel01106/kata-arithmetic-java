@@ -15,5 +15,11 @@ class ArithmeticShould {
         String result = arithmetic.calculate("3 + ( 2 * 1 )");
         assertEquals("Invalid record error", result);
     }
+    @Test
+    void throw_error_when_there_are_not_even_number_of_brackets(){
+        Arithmetic arithmetic = new Arithmetic();
+        String result = arithmetic.calculate("( 3 + ( 2 * 1 )");
+        assertEquals("Invalid record error", result);
+    }
 
 }
