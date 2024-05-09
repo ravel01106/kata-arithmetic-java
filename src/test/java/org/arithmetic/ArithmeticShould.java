@@ -21,5 +21,11 @@ class ArithmeticShould {
         String result = arithmetic.calculate("( 3 + ( 2 * 1 )");
         assertEquals("Invalid record error", result);
     }
+    @Test
+    void return_zero_when_only_there_are_brackets() {
+        Arithmetic arithmetic = new Arithmetic();
+        String result = arithmetic.calculate("((()()))");
+        assertEquals("0", result);
+    }
 
 }

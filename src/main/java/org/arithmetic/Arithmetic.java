@@ -7,6 +7,9 @@ public class Arithmetic {
 
     public String calculate(String expression) {
         String result = "";
+        if (expression.matches("^[(|)]*$")){
+            return "0";
+        }
         String[] expressionDivided = expression.split(" ");
         List<String> bracketsObtained = Arrays.stream(expressionDivided)
                 .filter((it) -> it.equals("(") || it.equals(")"))
