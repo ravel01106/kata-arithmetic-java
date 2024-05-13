@@ -30,8 +30,10 @@ class ArithmeticShould {
         String operator = String.valueOf(expression.charAt(4));
         if (operator.equals("+")){
             return String.valueOf(firstOperator + secondOperator);
+        }else if (operator.equals("-")){
+            return String.valueOf(firstOperator - secondOperator);
         }
-        return String.valueOf(firstOperator - secondOperator);
+        return String.valueOf(firstOperator * secondOperator);
     }
 
     private static boolean thereIsNotOperations(String expression) {
@@ -55,6 +57,11 @@ class ArithmeticShould {
     @Test
     void calculate_the_most_simple_subtract_operation(){
         assertEquals("-1", calculate("( 0 - 1 )"));
+    }
+
+    @Test
+    void calculate_the_most_simple_multiply_operation(){
+        assertEquals("2", calculate("( 2 * 1 )"));
     }
 
 
