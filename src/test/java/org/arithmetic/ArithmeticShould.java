@@ -19,6 +19,7 @@ class ArithmeticShould {
     // "( 6 / 2 )" -> "3"
     // "( 1 + ( 0 + 1 ) )" -> "2"
     // "( ( 2 + 3 ) + ( 3 + 2 ) )" -> "10"
+    // "( 1 + ( ( 2 + 3 ) * (4 * 5) ) )" -> "101"
     private String calculate(String expression) {
         if (thereIsNotOperations(expression)){
             return "0";
@@ -32,9 +33,10 @@ class ArithmeticShould {
 
         while (expressionCopy.contains("(") || expressionCopy.contains(")")){
             operation = giveNewExpression(expressionCopy);
-            firstOperator = Integer.parseInt(String.valueOf(operation.charAt(2)));
-            secondOperator = Integer.parseInt(String.valueOf(operation.charAt(6)));
-            operator = String.valueOf(operation.charAt(4));
+            String[] operationSplit = operation.split(" ");
+            firstOperator = Integer.parseInt(String.valueOf(operationSplit[1]));
+            secondOperator = Integer.parseInt(String.valueOf(operationSplit[3]));
+            operator = String.valueOf(operationSplit[2]);
             result = calculateOperationWith(firstOperator, secondOperator, operator);
             expressionCopy = expressionCopy.replace(operation,result);
         }
@@ -59,7 +61,7 @@ class ArithmeticShould {
                 operation+= letter + " ";
             }
         }
-        System.out.println(operation);
+        //System.out.println(operation);
         return operation;
     }
     private static String calculateOperationWith(int firstOperator, int secondOperator, String operator){
@@ -118,6 +120,12 @@ class ArithmeticShould {
     void calculate_the_most_simple_operation_with_brackets_inside(){
         assertEquals("2", calculate("( 1 + ( 0 + 1 ) )"));
     }
+
+    @Test
+    void calculate_the_another_operation_with_brackets_inside(){
+        assertEquals("10", calculate("( ( 2 + 3 ) + ( 3 + 2 ) )"));
+    }
+
 
 
 
