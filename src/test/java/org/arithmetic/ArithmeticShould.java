@@ -23,10 +23,46 @@ class ArithmeticShould {
         if (thereIsNotOperations(expression)){
             return "0";
         }
+        String expressionCopy = expression;
+        String operation = "";
+        int firstOperator = 0;
+        int secondOperator = 0;
+        String operator = "";
+        String result = "";
 
-        int firstOperator = Integer.parseInt(String.valueOf(expression.charAt(2)));
-        int secondOperator = Integer.parseInt(String.valueOf(expression.charAt(6)));
-        String operator = String.valueOf(expression.charAt(4));
+        while (expressionCopy.contains("(") || expressionCopy.contains(")")){
+            operation = giveNewExpression(expressionCopy);
+            firstOperator = Integer.parseInt(String.valueOf(operation.charAt(2)));
+            secondOperator = Integer.parseInt(String.valueOf(operation.charAt(6)));
+            operator = String.valueOf(operation.charAt(4));
+            result = calculateOperationWith(firstOperator, secondOperator, operator);
+            expressionCopy = expressionCopy.replace(operation,result);
+        }
+        return expressionCopy.trim();
+    }
+    private static String giveNewExpression (String expression){
+        String operators = "+-*/";
+        String[] expressionSplit = expression.split(" ");
+        String operation = "";
+        for (String letter: expressionSplit){
+            if (letter.equals(")")){
+                operation += ")";
+                break;
+            }else if (letter.equals("(")){
+                if (operation.contains("(")){
+                    operation = "";
+                }
+                operation += letter + " ";
+            }else if (isNumeric(letter)){
+                operation += letter + " ";
+            }else if (operators.contains(letter)){
+                operation+= letter + " ";
+            }
+        }
+        System.out.println(operation);
+        return operation;
+    }
+    private static String calculateOperationWith(int firstOperator, int secondOperator, String operator){
         return switch (operator) {
             case "+" -> String.valueOf(firstOperator + secondOperator);
             case "-" -> String.valueOf(firstOperator - secondOperator);
@@ -34,6 +70,15 @@ class ArithmeticShould {
             case "/" -> String.valueOf(firstOperator / secondOperator);
             default -> "Error";
         };
+    }
+
+    private static boolean isNumeric(String letter){
+        try{
+           int num = Integer.parseInt(letter);
+        }catch (NumberFormatException e){
+            return false;
+        }
+        return true;
     }
 
     private static boolean thereIsNotOperations(String expression) {
@@ -68,6 +113,12 @@ class ArithmeticShould {
     void calculate_the_most_simple_divide_operation(){
         assertEquals("3", calculate("( 6 / 2 )"));
     }
+
+    @Test
+    void calculate_the_most_simple_operation_with_brackets_inside(){
+        assertEquals("2", calculate("( 1 + ( 0 + 1 ) )"));
+    }
+
 
 
 
