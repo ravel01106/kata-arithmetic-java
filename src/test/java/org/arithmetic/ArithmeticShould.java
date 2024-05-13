@@ -28,12 +28,18 @@ class ArithmeticShould {
         int firstOperator = Integer.parseInt(String.valueOf(expression.charAt(2)));
         int secondOperator = Integer.parseInt(String.valueOf(expression.charAt(6)));
         String operator = String.valueOf(expression.charAt(4));
-        if (operator.equals("+")){
-            return String.valueOf(firstOperator + secondOperator);
-        }else if (operator.equals("-")){
-            return String.valueOf(firstOperator - secondOperator);
+        switch (operator){
+            case "+":
+                return String.valueOf(firstOperator + secondOperator);
+            case "-":
+                return String.valueOf(firstOperator - secondOperator);
+            case "*":
+                return String.valueOf(firstOperator * secondOperator);
+            case "/":
+                return String.valueOf(firstOperator / secondOperator);
+            default:
+                return "Error";
         }
-        return String.valueOf(firstOperator * secondOperator);
     }
 
     private static boolean thereIsNotOperations(String expression) {
@@ -62,6 +68,11 @@ class ArithmeticShould {
     @Test
     void calculate_the_most_simple_multiply_operation(){
         assertEquals("2", calculate("( 2 * 1 )"));
+    }
+
+    @Test
+    void calculate_the_most_simple_divide_operation(){
+        assertEquals("3", calculate("( 6 / 2 )"));
     }
 
 
