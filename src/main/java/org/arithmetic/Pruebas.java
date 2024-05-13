@@ -1,18 +1,19 @@
 package org.arithmetic;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.ArrayList;
+
 
 public class Pruebas {
     public static void main(String[] args) {
-        String expression = "( 1 - ( 1 + 1 ) * 2 )";
-        String[] prueba = expression.split(" ");
 
-        for (String it : prueba) {
-            System.out.print(it + "/");
-        }
-        List<String> algo = Arrays.stream(prueba).filter((it) -> it.equals("(") || it.equals(")")).toList();
-        System.out.println("\n" + algo.size());
+        String expression = "( 1 + ( ( 2 + 3 ) * (4 * 5) ) )";
+
+        String expressionTwo = "( 5 * ( 4 * ( 3 * ( 2 * ( 1 * 9 ) / 8 - 7 ) + 6 ) ) )";
+        String[] expressionDivided = expression.split(" ");
+        String[] expressionDividedTwo = expressionTwo.split(" ");
+       for ( String input: expressionDivided){
+           System.out.print(input + "/");
+       }
     }
 }
 

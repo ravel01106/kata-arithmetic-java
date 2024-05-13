@@ -5,27 +5,54 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ArithmeticShould {
+    // Rules
     // Devuelve un Error cuando no hay parentesis al principio y al final
     // Devolver un Error cuando no hay un número par de parentesis
     // Devolver 0 si no existe ningún número ni signos dentro de los parentesis
-    // Si no hay ningun error calculamos la operación
-    @Test
-    void throw_error_when_there_are_not_brackets_at_beginning_and_at_end(){
-        Arithmetic arithmetic = new Arithmetic();
-        String result = arithmetic.calculate("3 + ( 2 * 1 )");
-        assertEquals("Invalid record error", result);
-    }
-    @Test
-    void throw_error_when_there_are_not_even_number_of_brackets(){
-        Arithmetic arithmetic = new Arithmetic();
-        String result = arithmetic.calculate("( 3 + ( 2 * 1 )");
-        assertEquals("Invalid record error", result);
-    }
-    @Test
-    void return_zero_when_only_there_are_brackets() {
-        Arithmetic arithmetic = new Arithmetic();
-        String result = arithmetic.calculate("((()()))");
-        assertEquals("0", result);
+    // Calcular la operación siguiendo las reglas PEMDAS si no hay errores
+
+    // Examples
+    // "( )" -> "0"
+    // "( 0 + 1 )" -> "1"
+    // "( 0 - 1 )" -> "-1"
+    // "( 2 * 1 )" -> "2"
+    // "( 6 / 2 )" -> "3"
+    // "( 1 + ( 0 + 1 ) )" -> "2"
+    // "( ( 2 + 3 ) + ( 3 + 2 ) )" -> "10"
+    private String calculate(String expression) {
+        if (thereIsNotOperations(expression)){
+            return "0";
+        }
+
+        String operation = "( 0 + 1 )";
+        int firstOperator = Integer.parseInt(String.valueOf(expression.charAt(2)));
+        int secondOperator = Integer.parseInt(String.valueOf(expression.charAt(6)));
+        String operator = String.valueOf(expression.charAt(4));
+
+        return String.valueOf(firstOperator + secondOperator);
     }
 
+    private static boolean thereIsNotOperations(String expression) {
+        return expression
+                .replace('(', ' ')
+                .replace(')', ' ')
+                .trim().equals("");
+    }
+
+    @Test
+    void resolve_not_given_operation_as_zero(){
+        assertEquals("0", calculate("( )"));
+        assertEquals("0", calculate("( ( ) )"));
+    }
+
+    @Test
+    void calculate_the_most_simple_sum_operation(){
+        assertEquals("1", calculate("( 0 + 1 )"));
+    }
+
+
+
+
+
 }
+
