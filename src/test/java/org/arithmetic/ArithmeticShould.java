@@ -127,7 +127,10 @@ class ArithmeticShould {
     }
 
 
-
+    @Test
+    void calculate_the_another_more_complex_operation_with_brackets_inside(){
+        assertEquals("101", calculate("( 1 + ( ( 2 + 3 ) * ( 4 * 5 ) ) )"));
+    }
 
 
 }
