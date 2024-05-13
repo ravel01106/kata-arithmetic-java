@@ -24,29 +24,23 @@ class ArithmeticShould {
             return "0";
         }
 
-        String operation = "( 0 + 1 )";
         int firstOperator = Integer.parseInt(String.valueOf(expression.charAt(2)));
         int secondOperator = Integer.parseInt(String.valueOf(expression.charAt(6)));
         String operator = String.valueOf(expression.charAt(4));
-        switch (operator){
-            case "+":
-                return String.valueOf(firstOperator + secondOperator);
-            case "-":
-                return String.valueOf(firstOperator - secondOperator);
-            case "*":
-                return String.valueOf(firstOperator * secondOperator);
-            case "/":
-                return String.valueOf(firstOperator / secondOperator);
-            default:
-                return "Error";
-        }
+        return switch (operator) {
+            case "+" -> String.valueOf(firstOperator + secondOperator);
+            case "-" -> String.valueOf(firstOperator - secondOperator);
+            case "*" -> String.valueOf(firstOperator * secondOperator);
+            case "/" -> String.valueOf(firstOperator / secondOperator);
+            default -> "Error";
+        };
     }
 
     private static boolean thereIsNotOperations(String expression) {
         return expression
                 .replace('(', ' ')
                 .replace(')', ' ')
-                .trim().equals("");
+                .trim().isEmpty();
     }
 
     @Test
