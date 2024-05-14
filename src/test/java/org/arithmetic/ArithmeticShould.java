@@ -21,13 +21,12 @@ class ArithmeticShould {
     // "( ( 2 + 3 ) + ( 3 + 2 ) )" -> "10"
     // "( 1 + ( ( 2 + 3 ) * (4 * 5) ) )" -> "101"
     private String calculate(String expression) {
-        if (thereIsNotOperations(expression)){
-            return "0";
-        }
         String expressionCopy = expression;
         String operation = "";
         String resultOfOperation = "";
-        
+
+        if (thereIsNotOperations(expression)) return "0";
+
 
         while (isContainBrackets(expressionCopy)){
             operation = pickUpAnOperationWithBracketsFrom(expressionCopy);
@@ -35,9 +34,9 @@ class ArithmeticShould {
             resultOfOperation = calculateOperationInBrackets(operation, expressionDivided);
             expressionCopy = expressionCopy.replace(operation,resultOfOperation);
         }
-        if (isInteger(expressionCopy)){
-            return removeCommasIn(expressionCopy);
-        }
+
+        if (isInteger(expressionCopy)) return removeCommasIn(expressionCopy);
+
         return expressionCopy;
     }
     private static boolean isContainBrackets(String expression){
@@ -74,24 +73,21 @@ class ArithmeticShould {
     private static String pickUpAnOperationWithBracketsFrom(String expression){
         String allSignals = "+-*/";
         String[] expressionDivided = expression.split(" ");
-        String operation = "";
+        StringBuilder operation = new StringBuilder();
         for (String sign: expressionDivided){
             if (sign.equals(")")){
-                operation += ")";
+                operation.append(")");
                 break;
             }else if (sign.equals("(")){
-                if (operation.contains("(")){
-                    operation = "";
+                if (operation.toString().contains("(")){
+                    operation = new StringBuilder();
                 }
-                operation += sign + " ";
-            }else if (isNumeric(sign)){
-                operation += sign + " ";
-            }else if (allSignals.contains(sign)){
-                operation+= sign + " ";
+                operation.append(sign).append(" ");
+            }else if (isNumeric(sign) || allSignals.contains(sign)){
+                operation.append(sign).append(" ");
             }
         }
-        //System.out.println(operation);
-        return operation;
+        return operation.toString();
     }
     private static double obtainFirstOperatorIn(String[] expression){
     return Double.parseDouble(String.valueOf(expression[1]));
