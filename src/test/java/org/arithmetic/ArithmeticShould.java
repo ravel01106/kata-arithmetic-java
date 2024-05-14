@@ -26,22 +26,55 @@ class ArithmeticShould {
         }
         String expressionCopy = expression;
         String operation = "";
-        int firstOperator = 0;
-        int secondOperator = 0;
-        String operator = "";
         String result = "";
 
         while (expressionCopy.contains("(") || expressionCopy.contains(")")){
             operation = giveNewExpression(expressionCopy);
             String[] operationSplit = operation.split(" ");
-            firstOperator = Integer.parseInt(String.valueOf(operationSplit[1]));
-            secondOperator = Integer.parseInt(String.valueOf(operationSplit[3]));
-            operator = String.valueOf(operationSplit[2]);
-            result = calculateOperationWith(firstOperator, secondOperator, operator);
+            if (operationSplit.length == 5){
+                result = calculateOperationWithTwoNumbers(operationSplit);
+            }else{
+                result = calculateOperationWithMoreThanTwoNumbers(operation, operationSplit);
+            }
             expressionCopy = expressionCopy.replace(operation,result);
+        }
+        if (expressionCopy.contains(".0")){
+            int number = (int)Double.parseDouble(expressionCopy);
+            return String.valueOf(number);
         }
         return expressionCopy.trim();
     }
+    private static String calculateOperationWithTwoNumbers( String[] operationSplit ){
+        double firstOperator = 0;
+        double secondOperator = 0;
+        String operator = "";
+        String result = "";
+
+        firstOperator = Double.parseDouble(String.valueOf(operationSplit[1]));
+        secondOperator = Double.parseDouble(String.valueOf(operationSplit[3]));
+        operator = String.valueOf(operationSplit[2]);
+        result = calculateOperationWith(firstOperator, secondOperator, operator);
+        return result;
+    }
+    private static String calculateOperationWithMoreThanTwoNumbers(String operation, String[] operationSplit){
+        double firstOperator = 0;
+        double secondOperator = 0;
+        String operator = "";
+        String result = "";
+        String copyOperation = operation;
+        while (operationSplit.length > 3 ){
+            operationSplit = copyOperation.split(" ");
+            String simpleOperation = operationSplit[1] + " " + operationSplit[2] + " " + operationSplit[3];
+            firstOperator = Double.parseDouble(String.valueOf(operationSplit[1]));
+            secondOperator = Double.parseDouble(String.valueOf(operationSplit[3]));
+            operator = String.valueOf(operationSplit[2]);
+            result = calculateOperationWith(firstOperator, secondOperator, operator);
+            copyOperation = copyOperation.replace(simpleOperation, result);
+            operationSplit = copyOperation.split(" ");
+        }
+        return result;
+    }
+
     private static String giveNewExpression (String expression){
         String operators = "+-*/";
         String[] expressionSplit = expression.split(" ");
@@ -64,7 +97,7 @@ class ArithmeticShould {
         //System.out.println(operation);
         return operation;
     }
-    private static String calculateOperationWith(int firstOperator, int secondOperator, String operator){
+    private static String calculateOperationWith(double firstOperator, double secondOperator, String operator){
         return switch (operator) {
             case "+" -> String.valueOf(firstOperator + secondOperator);
             case "-" -> String.valueOf(firstOperator - secondOperator);
@@ -76,7 +109,7 @@ class ArithmeticShould {
 
     private static boolean isNumeric(String letter){
         try{
-           int num = Integer.parseInt(letter);
+           double num = Double.parseDouble(letter);
         }catch (NumberFormatException e){
             return false;
         }
@@ -130,6 +163,11 @@ class ArithmeticShould {
     @Test
     void calculate_the_another_more_complex_operation_with_brackets_inside(){
         assertEquals("101", calculate("( 1 + ( ( 2 + 3 ) * ( 4 * 5 ) ) )"));
+    }
+
+    @Test
+    void calculate_the_another_more_complex_operation_with_some_brackets_inside(){
+        assertEquals("-165", calculate("( 5 * ( 4 * ( 3 * ( 2 * ( 1 * 9 ) / 8 - 7 ) + 6 ) ) )"));
     }
 
 
