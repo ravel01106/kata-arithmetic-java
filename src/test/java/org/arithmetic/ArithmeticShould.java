@@ -26,78 +26,86 @@ class ArithmeticShould {
         }
         String expressionCopy = expression;
         String operation = "";
-        String result = "";
+        String resultOfOperation = "";
+        
 
-        while (expressionCopy.contains("(") || expressionCopy.contains(")")){
-            operation = giveNewExpression(expressionCopy);
-            String[] operationSplit = operation.split(" ");
-            if (operationSplit.length == 5){
-                result = calculateOperationWithTwoNumbers(operationSplit);
-            }else{
-                result = calculateOperationWithMoreThanTwoNumbers(operation, operationSplit);
-            }
-            expressionCopy = expressionCopy.replace(operation,result);
+        while (isContainBrackets(expressionCopy)){
+            operation = pickUpAnOperationWithBracketsFrom(expressionCopy);
+            String[] expressionDivided = operation.split(" ");
+            resultOfOperation = calculateOperationInBrackets(operation, expressionDivided);
+            expressionCopy = expressionCopy.replace(operation,resultOfOperation);
         }
-        if (expressionCopy.contains(".0")){
-            int number = (int)Double.parseDouble(expressionCopy);
-            return String.valueOf(number);
+        if (isInteger(expressionCopy)){
+            return removeCommasIn(expressionCopy);
         }
-        return expressionCopy.trim();
+        return expressionCopy;
     }
-    private static String calculateOperationWithTwoNumbers( String[] operationSplit ){
-        double firstOperator = 0;
-        double secondOperator = 0;
-        String operator = "";
-        String result = "";
+    private static boolean isContainBrackets(String expression){
+        return expression.contains("(") || expression.contains(")");
+    }
+    private static boolean isInteger(String expression){
+        return expression.contains(".0");
+    }
+    private String removeCommasIn(String expression){
+        int number = (int)Double.parseDouble(expression);
+        return String.valueOf(number);
+    }
 
-        firstOperator = Double.parseDouble(String.valueOf(operationSplit[1]));
-        secondOperator = Double.parseDouble(String.valueOf(operationSplit[3]));
-        operator = String.valueOf(operationSplit[2]);
-        result = calculateOperationWith(firstOperator, secondOperator, operator);
-        return result;
-    }
-    private static String calculateOperationWithMoreThanTwoNumbers(String operation, String[] operationSplit){
-        double firstOperator = 0;
-        double secondOperator = 0;
-        String operator = "";
+    private static String calculateOperationInBrackets(String operation, String[] operationDivided){
         String result = "";
-        String copyOperation = operation;
-        while (operationSplit.length > 3 ){
-            operationSplit = copyOperation.split(" ");
-            String simpleOperation = operationSplit[1] + " " + operationSplit[2] + " " + operationSplit[3];
-            firstOperator = Double.parseDouble(String.valueOf(operationSplit[1]));
-            secondOperator = Double.parseDouble(String.valueOf(operationSplit[3]));
-            operator = String.valueOf(operationSplit[2]);
-            result = calculateOperationWith(firstOperator, secondOperator, operator);
-            copyOperation = copyOperation.replace(simpleOperation, result);
-            operationSplit = copyOperation.split(" ");
+        String operationInBrackets = operation;
+        while (thereIsAnOperation(operationDivided)){
+            operationDivided = operationInBrackets.split(" ");
+            String simpleOperation = formatSimpleOperationFrom(operationDivided);
+            result = calculateResult(operationDivided);
+            operationInBrackets = operationInBrackets.replace(simpleOperation, result);
+            operationDivided = operationInBrackets.split(" ");
         }
         return result;
     }
+    private static String formatSimpleOperationFrom(String[] expression){
+        return expression[1] + " " + expression[2] + " " + expression[3];
+    }
 
-    private static String giveNewExpression (String expression){
-        String operators = "+-*/";
-        String[] expressionSplit = expression.split(" ");
+    private static boolean thereIsAnOperation(String[] operationDivided){
+        return operationDivided.length > 3;
+    }
+
+    private static String pickUpAnOperationWithBracketsFrom(String expression){
+        String allSignals = "+-*/";
+        String[] expressionDivided = expression.split(" ");
         String operation = "";
-        for (String letter: expressionSplit){
-            if (letter.equals(")")){
+        for (String sign: expressionDivided){
+            if (sign.equals(")")){
                 operation += ")";
                 break;
-            }else if (letter.equals("(")){
+            }else if (sign.equals("(")){
                 if (operation.contains("(")){
                     operation = "";
                 }
-                operation += letter + " ";
-            }else if (isNumeric(letter)){
-                operation += letter + " ";
-            }else if (operators.contains(letter)){
-                operation+= letter + " ";
+                operation += sign + " ";
+            }else if (isNumeric(sign)){
+                operation += sign + " ";
+            }else if (allSignals.contains(sign)){
+                operation+= sign + " ";
             }
         }
         //System.out.println(operation);
         return operation;
     }
-    private static String calculateOperationWith(double firstOperator, double secondOperator, String operator){
+    private static double obtainFirstOperatorIn(String[] expression){
+    return Double.parseDouble(String.valueOf(expression[1]));
+    }
+    private static double obtainSecondOperatorIn(String[] expression){
+        return Double.parseDouble(String.valueOf(expression[3]));
+    }
+    private static String obtainSignalIn(String[] expression){
+        return expression[2];
+    }
+    private static String calculateResult(String[] operationDivided){
+        double firstOperator = obtainFirstOperatorIn(operationDivided);
+        double secondOperator = obtainSecondOperatorIn(operationDivided);
+        String operator = obtainSignalIn(operationDivided);
         return switch (operator) {
             case "+" -> String.valueOf(firstOperator + secondOperator);
             case "-" -> String.valueOf(firstOperator - secondOperator);
@@ -158,7 +166,6 @@ class ArithmeticShould {
     void calculate_the_another_operation_with_brackets_inside(){
         assertEquals("10", calculate("( ( 2 + 3 ) + ( 3 + 2 ) )"));
     }
-
 
     @Test
     void calculate_the_another_more_complex_operation_with_brackets_inside(){
