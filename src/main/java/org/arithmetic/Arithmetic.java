@@ -1,9 +1,12 @@
 package org.arithmetic;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class Arithmetic {
 
     public String calculate(String expression) {
-        if (!hasBrackets(expression)) return "Invalid record error";
+        if (!hasBrackets(expression) || !hasEvenNumberOfBrackets(expression)) return "Invalid record error";
         if (thereIsNotOperations(expression)) return "0";
 
         String expressionCopy = expression;
@@ -11,7 +14,7 @@ public class Arithmetic {
         String resultOfOperation = calculateOperationInBrackets(operation);
         expressionCopy = replaceTheSimpleOperationWithResult(expressionCopy, operation, resultOfOperation);
 
-        if (isContainBrackets(expressionCopy)){
+        if (hasBrackets(expressionCopy)){
             return calculate(expressionCopy);
         }
 
@@ -77,8 +80,12 @@ public class Arithmetic {
     private boolean hasBrackets(String expression) {
         return expression.startsWith("(") && expression.endsWith(")");
     }
-    private boolean isContainBrackets(String expression){
-        return expression.contains("(") || expression.contains(")");
+    private boolean hasEvenNumberOfBrackets(String expression) {
+        String[] expressionDivided = divideExpressionBySpaces(expression);
+        int numberBracketsObtained = Arrays.stream(expressionDivided)
+                .filter(it -> it.equals("(") || it.equals(")")).toList().size();
+        return numberBracketsObtained % 2 == 0;
+
     }
     private boolean isInteger(String expression){
         return expression.contains(".0");
