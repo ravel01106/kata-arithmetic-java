@@ -180,5 +180,10 @@ class ArithmeticShould {
         assertEquals("Invalid record error", calculate(" 3 + ( 2 * 1 )"));
     }
 
+    @Test
+    void throw_error_when_there_is_no_even_number_of_brackets(){
+        assertEquals("Invalid record error", calculate("( 3 + ( 2 * 1 )"));
+    }
+
 }
 
