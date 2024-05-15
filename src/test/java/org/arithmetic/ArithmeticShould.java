@@ -13,6 +13,7 @@ class ArithmeticShould {
 
     // Examples
     // "( )" -> "0"
+    // "( ( ) )" -> "0"
     // "( 0 + 1 )" -> "1"
     // "( 0 - 1 )" -> "-1"
     // "( 2 * 1 )" -> "2"
@@ -20,7 +21,10 @@ class ArithmeticShould {
     // "( 1 + ( 0 + 1 ) )" -> "2"
     // "( ( 2 + 3 ) + ( 3 + 2 ) )" -> "10"
     // "( 1 + ( ( 2 + 3 ) * (4 * 5) ) )" -> "101"
+    // "3 + ( 2 * 1 )" -> "Invalid record error"
+    // "( 3 + ( 2 * 1 )" -> "Invalid record error"
     private String calculate(String expression) {
+        if (!expression.startsWith("(") || !expression.endsWith(")")) return "Invalid record error";
         if (thereIsNotOperations(expression)) return "0";
 
         String expressionCopy = expression;
@@ -125,7 +129,6 @@ class ArithmeticShould {
         return true;
     }
 
-
     @Test
     void resolve_not_given_operation_as_zero(){
         assertEquals("0", calculate("( )"));
@@ -172,6 +175,10 @@ class ArithmeticShould {
         assertEquals("-165", calculate("( 5 * ( 4 * ( 3 * ( 2 * ( 1 * 9 ) / 8 - 7 ) + 6 ) ) )"));
     }
 
+    @Test
+    void throw_error_when_there_are_not_brackets_at_beginning_and_end(){
+        assertEquals("Invalid record error", calculate(" 3 + ( 2 * 1 )"));
+    }
 
 }
 
