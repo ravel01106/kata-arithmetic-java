@@ -24,7 +24,7 @@ class ArithmeticShould {
     // "3 + ( 2 * 1 )" -> "Invalid record error"
     // "( 3 + ( 2 * 1 )" -> "Invalid record error"
     private String calculate(String expression) {
-        if (!expression.startsWith("(") || !expression.endsWith(")")) return "Invalid record error";
+        if (!hasBrackets(expression)) return "Invalid record error";
         if (thereIsNotOperations(expression)) return "0";
 
         String expressionCopy = expression;
@@ -54,7 +54,7 @@ class ArithmeticShould {
     }
     private static String pickUpAnOperationWithBracketsFrom(String expression){
         String allSignals = "+-*/";
-        String[] expressionDivided = expression.split(" ");
+        String[] expressionDivided = divideExpressionBySpaces(expression);
         StringBuilder operation = new StringBuilder();
         for (String sign: expressionDivided){
             if (sign.equals(")")){
@@ -92,6 +92,9 @@ class ArithmeticShould {
                 .replace('(', ' ')
                 .replace(')', ' ')
                 .trim().isEmpty();
+    }
+    private static boolean hasBrackets(String expression) {
+        return expression.startsWith("(") && expression.endsWith(")");
     }
     private static boolean isContainBrackets(String expression){
         return expression.contains("(") || expression.contains(")");
