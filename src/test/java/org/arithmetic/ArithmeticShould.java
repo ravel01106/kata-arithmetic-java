@@ -118,7 +118,7 @@ class ArithmeticShould {
     }
     private static boolean isNumeric(String letter){
         try{
-           double num = Double.parseDouble(letter);
+           Double.parseDouble(letter);
         }catch (NumberFormatException e){
             return false;
         }
