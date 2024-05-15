@@ -1,7 +1,6 @@
 package org.arithmetic;
 
 import java.util.Arrays;
-import java.util.List;
 
 public class Arithmetic {
 
