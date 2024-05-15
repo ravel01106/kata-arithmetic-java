@@ -21,31 +21,19 @@ class ArithmeticShould {
     // "( ( 2 + 3 ) + ( 3 + 2 ) )" -> "10"
     // "( 1 + ( ( 2 + 3 ) * (4 * 5) ) )" -> "101"
     private String calculate(String expression) {
-        String expressionCopy = expression;
-        String operation = "";
-        String resultOfOperation = "";
-
         if (thereIsNotOperations(expression)) return "0";
 
-        while (isContainBrackets(expressionCopy)){
-            operation = pickUpAnOperationWithBracketsFrom(expressionCopy);
-            resultOfOperation = calculateOperationInBrackets(operation);
-            expressionCopy = replaceTheSimpleOperationWithResult(expressionCopy, operation, resultOfOperation);
+        String expressionCopy = expression;
+        String operation = pickUpAnOperationWithBracketsFrom(expressionCopy);
+        String resultOfOperation = calculateOperationInBrackets(operation);
+        expressionCopy = replaceTheSimpleOperationWithResult(expressionCopy, operation, resultOfOperation);
+
+        if (isContainBrackets(expressionCopy)){
+            return calculate(expressionCopy);
         }
 
         if (isInteger(expressionCopy)) return removeCommasIn(expressionCopy);
-
         return expressionCopy;
-    }
-    private static boolean isContainBrackets(String expression){
-        return expression.contains("(") || expression.contains(")");
-    }
-    private static boolean isInteger(String expression){
-        return expression.contains(".0");
-    }
-    private String removeCommasIn(String expression){
-        int number = (int)Double.parseDouble(expression);
-        return String.valueOf(number);
     }
 
     private static String calculateOperationInBrackets(String operation){
@@ -60,21 +48,6 @@ class ArithmeticShould {
         }
         return result;
     }
-
-    private static String[] divideExpressionBySpaces(String expression){
-        return expression.split(" ");
-    }
-    private static String replaceTheSimpleOperationWithResult(String expression, String simpleOperation, String result){
-        return expression.replace(simpleOperation, result);
-    }
-    private static String formatSimpleOperationFrom(String[] expression){
-        return expression[1] + " " + expression[2] + " " + expression[3];
-    }
-
-    private static boolean thereIsAnOperation(String[] operationDivided){
-        return operationDivided.length > 3;
-    }
-
     private static String pickUpAnOperationWithBracketsFrom(String expression){
         String allSignals = "+-*/";
         String[] expressionDivided = expression.split(" ");
@@ -94,15 +67,6 @@ class ArithmeticShould {
         }
         return operation.toString();
     }
-    private static double obtainFirstOperatorIn(String[] expression){
-    return Double.parseDouble(String.valueOf(expression[1]));
-    }
-    private static double obtainSecondOperatorIn(String[] expression){
-        return Double.parseDouble(String.valueOf(expression[3]));
-    }
-    private static String obtainSignalIn(String[] expression){
-        return expression[2];
-    }
     private static String calculateResult(String[] operationDivided){
         double firstOperator = obtainFirstOperatorIn(operationDivided);
         double secondOperator = obtainSecondOperatorIn(operationDivided);
@@ -115,7 +79,43 @@ class ArithmeticShould {
             default -> "Error";
         };
     }
-
+    private String removeCommasIn(String expression){
+        int number = (int)Double.parseDouble(expression);
+        return String.valueOf(number);
+    }
+    private static boolean thereIsNotOperations(String expression) {
+        return expression
+                .replace('(', ' ')
+                .replace(')', ' ')
+                .trim().isEmpty();
+    }
+    private static boolean isContainBrackets(String expression){
+        return expression.contains("(") || expression.contains(")");
+    }
+    private static boolean isInteger(String expression){
+        return expression.contains(".0");
+    }
+    private static String[] divideExpressionBySpaces(String expression){
+        return expression.split(" ");
+    }
+    private static String replaceTheSimpleOperationWithResult(String expression, String simpleOperation, String result){
+        return expression.replace(simpleOperation, result);
+    }
+    private static String formatSimpleOperationFrom(String[] expression){
+        return expression[1] + " " + expression[2] + " " + expression[3];
+    }
+    private static boolean thereIsAnOperation(String[] operationDivided){
+        return operationDivided.length > 3;
+    }
+    private static double obtainFirstOperatorIn(String[] expression){
+    return Double.parseDouble(String.valueOf(expression[1]));
+    }
+    private static double obtainSecondOperatorIn(String[] expression){
+        return Double.parseDouble(String.valueOf(expression[3]));
+    }
+    private static String obtainSignalIn(String[] expression){
+        return expression[2];
+    }
     private static boolean isNumeric(String letter){
         try{
            double num = Double.parseDouble(letter);
@@ -125,12 +125,6 @@ class ArithmeticShould {
         return true;
     }
 
-    private static boolean thereIsNotOperations(String expression) {
-        return expression
-                .replace('(', ' ')
-                .replace(')', ' ')
-                .trim().isEmpty();
-    }
 
     @Test
     void resolve_not_given_operation_as_zero(){
