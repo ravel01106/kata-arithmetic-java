@@ -27,12 +27,10 @@ class ArithmeticShould {
 
         if (thereIsNotOperations(expression)) return "0";
 
-
         while (isContainBrackets(expressionCopy)){
             operation = pickUpAnOperationWithBracketsFrom(expressionCopy);
-            String[] expressionDivided = operation.split(" ");
-            resultOfOperation = calculateOperationInBrackets(operation, expressionDivided);
-            expressionCopy = expressionCopy.replace(operation,resultOfOperation);
+            resultOfOperation = calculateOperationInBrackets(operation);
+            expressionCopy = replaceTheSimpleOperationWithResult(expressionCopy, operation, resultOfOperation);
         }
 
         if (isInteger(expressionCopy)) return removeCommasIn(expressionCopy);
@@ -50,17 +48,24 @@ class ArithmeticShould {
         return String.valueOf(number);
     }
 
-    private static String calculateOperationInBrackets(String operation, String[] operationDivided){
-        String result = "";
+    private static String calculateOperationInBrackets(String operation){
         String operationInBrackets = operation;
-        while (thereIsAnOperation(operationDivided)){
-            operationDivided = operationInBrackets.split(" ");
-            String simpleOperation = formatSimpleOperationFrom(operationDivided);
-            result = calculateResult(operationDivided);
-            operationInBrackets = operationInBrackets.replace(simpleOperation, result);
-            operationDivided = operationInBrackets.split(" ");
+        String[] operationDivided = divideExpressionBySpaces(operationInBrackets);
+        String simpleOperation = formatSimpleOperationFrom(operationDivided);
+        String result = calculateResult(operationDivided);
+        operationInBrackets = replaceTheSimpleOperationWithResult(operationInBrackets, simpleOperation, result);
+        operationDivided = divideExpressionBySpaces(operationInBrackets);
+        if (thereIsAnOperation(operationDivided)){
+            return calculateOperationInBrackets(operationInBrackets);
         }
         return result;
+    }
+
+    private static String[] divideExpressionBySpaces(String expression){
+        return expression.split(" ");
+    }
+    private static String replaceTheSimpleOperationWithResult(String expression, String simpleOperation, String result){
+        return expression.replace(simpleOperation, result);
     }
     private static String formatSimpleOperationFrom(String[] expression){
         return expression[1] + " " + expression[2] + " " + expression[3];
